@@ -2,11 +2,32 @@ import pytube
 import os
 import moviepy.editor as mp
 from shutil import rmtree
+
 class YDownloader():
-    def __init__(self, download):
-        self.URL = download
+    def __init__(self):
+        self.URL = str()
+        
         self.titles = list()
-            
+
+        self.root = os.getcwd()
+
+        print(self.root)
+
+
+        self.setUp()
+
+
+    def setUp(self):
+    
+        if not os.path.exists(self.root + "/Videos"):
+
+            os.makedirs(self.root + "/Videos")
+
+        if not os.path.exists(self.root + "/Videos"):
+
+            os.makedirs(self.root + "/Songs")
+
+
     def setPlaylist(self, download):
         
         self.titles.clear()
@@ -22,7 +43,7 @@ class YDownloader():
         for video in lista.videos:
             try:
                 cancion = video.streams.filter(file_extension='mp4').first()
-                cancion.download(output_path=r'C:\Users\52322\Desktop\Youtube-Downloader\Videos')
+                cancion.download(output_path=self.root+"/Videos")
                 self.titles.append(video.title)
             
             except Exception as e:
@@ -30,21 +51,21 @@ class YDownloader():
     
     def convertSongs(self):
 
-        dir_list = os.listdir(r'C:\Users\52322\Desktop\Youtube-Downloader\Videos')
+        dir_list = os.listdir(self.root+"/Videos")
     
         for i in dir_list:
-            name = fr"C:\Users\52322\Desktop\Youtube-Downloader\Videos\{i}"
+            name = fr"{self.root}/Videos/{i}"
             print(name)
         
             clip = mp.VideoFileClip(name)
             
-            clip.audio.write_audiofile(fr"C:\Users\52322\Desktop\Youtube-Downloader\Songs\{i[:-4]}.mp3")
+            clip.audio.write_audiofile(fr"{self.root}/Songs/{i[:-4]}.mp3")
 
             clip.close()
 
-        rmtree(r'C:\Users\52322\Desktop\Youtube-Downloader\Videos')
+        rmtree(self.root+"/Videos")
         
-        os.mkdir(r'C:\Users\52322\Desktop\Youtube-Downloader\Videos')
+        os.mkdir(self.root+"/Videos")
 
     
     def getList(self):
